@@ -1,16 +1,20 @@
-#define RELAY_PIN 7  // The relay is connected to Digital Pin 7
+int relayPin = 3;         // Relay module connected to pin 3
+int moistureThreshold = 500; 
 
 void setup() {
-  pinMode(RELAY_PIN, OUTPUT);  // Set the relay pin as an output
-  Serial.begin(9600);  // Start serial communication
+  pinMode(relayPin, OUTPUT); // Output pin for relay
 }
 
 void loop() {
-  Serial.println("Relay ON");
-  digitalWrite(RELAY_PIN, HIGH);  // Turn the relay ON
-  delay(3000);  // Wait 3 seconds
+  int moistureValue = 500; 
+  controlWaterPump(moistureValue);
+  delay(1000); // Wait before next activation
+}
 
-  Serial.println("Relay OFF");
-  digitalWrite(RELAY_PIN, LOW);  // Turn the relay OFF
-  delay(3000);  // Wait 3 seconds
+void controlWaterPump(int moistureValue) {
+  if (moistureValue > moistureThreshold) { 
+    digitalWrite(relayPin, HIGH); // Turn ON water pump if soil is dry
+  } else {
+    digitalWrite(relayPin, LOW);  // Turn OFF water pump if soil is moist
+  }
 }
