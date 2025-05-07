@@ -1,0 +1,39 @@
+#include <WiFiNINA.h>
+
+const char* ssid = "Cillian's S23 FE";           
+const char* password = "fy2ujawhi84yiwx";   
+
+const char* host = "script.google.com";
+const int httpsPort = 443;
+
+const char* googleScriptPath = "/macros/s/AKfycbwNfQpnyBgGcA8g7hTPHtdHxu6gnUJII9-6A0DnlYio6LLp5Hl__bjYT4ASzkdXs2PmOw/exec";
+
+int moistureSensor = A0;
+int relayPin = 3;
+int moistureThreshold = 500;
+
+WiFiSSLClient client; 
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(relayPin, OUTPUT);
+
+  Serial.print("Connecting to WiFi...");
+  while (WiFi.begin(ssid, password) != WL_CONNECTED) {
+    Serial.print(".");
+    delay(1000);
+  }
+  Serial.println("\nWiFi connected.");
+}
+
+void loop() {
+  int moistureValue = analogRead(moistureSensor);
+  String pumpStatus;
+
+  if (moistureValue > moistureThreshold) {
+    digitalWrite(relayPin, LOW);
+    pumpStatus = "OFF";
+  } else {
+    digitalWrite(relayPin, HIGH);
+    pumpStatus = "ON";
+  }
